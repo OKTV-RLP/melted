@@ -1,7 +1,7 @@
 include ../../config.mak
 
-CXXFLAGS += -Wall -g  -I.. -I../melted++ `pkg-config mlt++ --cflags`
-LDFLAGS  += -L../melted++ -lmelted++ -L../melted -lmelted -L../mvcp -lmvcp `pkg-config mlt++ --libs`
+CXXFLAGS += -std=c++17 -Wall -g  -I.. -I../melted++ `pkg-config mlt++-7 --cflags`
+LDFLAGS  += -L../melted++ -lmelted++ -L../melted -lmelted -L../mvcp -lmvcp `pkg-config mlt++-7 --libs`
 CC=c++
 
 all:		server

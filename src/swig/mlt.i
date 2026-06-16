@@ -93,7 +93,7 @@ namespace Mlt {
 
 %{
 
-static void ruby_listener( mlt_properties owner, void *object );
+static void ruby_listener( mlt_properties owner, void *object, mlt_event_data event_data );
 
 class RubyListener
 {
@@ -125,7 +125,7 @@ class RubyListener
     	}
 };
 
-static void ruby_listener( mlt_properties owner, void *object )
+static void ruby_listener( mlt_properties owner, void *object, mlt_event_data event_data )
 {
 	RubyListener *o = static_cast< RubyListener * >( object );
 	o->doit( );
