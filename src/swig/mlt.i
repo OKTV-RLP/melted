@@ -19,6 +19,12 @@
  */
 
 %module mlt
+
+/* MLT 7 decorates its public symbols with the MLT_EXPORT visibility macro,
+   which the SWIG parser does not understand. Strip it for SWIG's preprocessor
+   only (the real definition is still used when the wrapper is compiled). */
+#define MLT_EXPORT
+
 %include "carrays.i"
 %array_class(unsigned char, unsignedCharArray);
 
@@ -73,7 +79,6 @@ namespace Mlt {
 %include <MltEvent.h>
 %include <MltProperties.h>
 %include <MltFrame.h>
-%include <MltGeometry.h>
 %include <MltService.h>
 %include <MltProducer.h>
 %include <MltProfile.h>

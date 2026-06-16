@@ -25,5 +25,5 @@ extern mlt_consumer consumer_mvcp_init( mlt_profile profile, mlt_service_type ty
 
 MLT_REPOSITORY
 {
-	MLT_REGISTER( consumer_type, "mvcp", consumer_mvcp_init );
+	MLT_REGISTER( mlt_service_consumer_type, "mvcp", consumer_mvcp_init );
 }

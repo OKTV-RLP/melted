@@ -36,7 +36,7 @@ SRCS := $(OBJS:.o=.c)
 
 CFLAGS += -I.. $(RDYNAMIC)
 
-LDFLAGS += -L../framework -lmlt -lpthread
+LDFLAGS += -lpthread
 
 all: $(TARGET)
 
