@@ -45,24 +45,6 @@
 #include <mvcp/mvcp_remote.h>
 #include <mvcp/mvcp_tokeniser.h>
 
-static void melted_command_received( mlt_listener listener, mlt_properties owner, melted_server this, void **args )
-{
-	if ( listener != NULL )
-		listener( owner, this, ( mvcp_response ** )args[ 0 ], ( char * )args[ 1 ] );
-}
-
-static void melted_doc_received( mlt_listener listener, mlt_properties owner, melted_server this, void **args )
-{
-	if ( listener != NULL )
-		listener( owner, this, ( mvcp_response ** )args[ 0 ], ( char * )args[ 1 ], ( char * )args[ 2 ] );
-}
-
-static void melted_push_received( mlt_listener listener, mlt_properties owner, melted_server this, void **args )
-{
-	if ( listener != NULL )
-		listener( owner, this, ( mvcp_response ** )args[ 0 ], ( char * )args[ 1 ], ( mlt_service )args[ 2 ] );
-}
-
 /** Initialise a server structure.
 */
 
@@ -78,9 +60,9 @@ melted_server melted_server_init( char *id )
 		server->socket = -1;
 		server->shutdown = 1;
 		mlt_events_init( &server->parent );
-		mlt_events_register( &server->parent, "command-received", ( mlt_transmitter )melted_command_received );
-		mlt_events_register( &server->parent, "doc-received", ( mlt_transmitter )melted_doc_received );
-		mlt_events_register( &server->parent, "push-received", ( mlt_transmitter )melted_push_received );
+		mlt_events_register( &server->parent, "command-received" );
+		mlt_events_register( &server->parent, "doc-received" );
+		mlt_events_register( &server->parent, "push-received" );
 	}
 	return server;
 }

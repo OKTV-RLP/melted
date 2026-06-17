@@ -96,9 +96,9 @@ class Custom : public Melted
 		}
 
 		// Callback for frame render notification
-		static void frame_render( mlt_consumer, Custom *self, mlt_frame frame_ptr )
+		static void frame_render( mlt_properties, Custom *self, mlt_event_data event_data )
 		{
-			Frame frame( frame_ptr );
+			Frame frame( mlt_event_data_to_frame( event_data ) );
 			self->frame_render_event( frame );
 		}
 

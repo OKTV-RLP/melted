@@ -94,8 +94,8 @@ build_config()
 		esac
 		echo "LIBSUF=$LIBSUF"
 		
-		echo "CFLAGS += `pkg-config --cflags mlt-framework`"
-		echo "LDFLAGS += `pkg-config --libs mlt-framework`"
+		echo "CFLAGS += `pkg-config --cflags mlt-framework-7`"
+		echo "LDFLAGS += `pkg-config --libs mlt-framework-7`"
 
 	) > config.mak
 

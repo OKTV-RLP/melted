@@ -2,6 +2,6 @@
 Name: mlt-melted
 Description: MLT Melted server API
 Version: ${version}
-Requires: mlt-framework
+Requires: mlt-framework-7
 Libs: -L${libdir} ${libs}
 Cflags: ${cflags}

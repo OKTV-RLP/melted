@@ -18,5 +18,5 @@ case $targetos in
 		;;
 esac >> config.mak
 
-echo "CXXFLAGS += `pkg-config --cflags mlt++`" >> config.mak
-echo "LDFLAGS += `pkg-config --libs mlt++`" >> config.mak
+echo "CXXFLAGS += -std=c++17 `pkg-config --cflags mlt++-7`" >> config.mak
+echo "LDFLAGS += `pkg-config --libs mlt++-7`" >> config.mak
