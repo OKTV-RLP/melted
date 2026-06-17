@@ -1,0 +1,48 @@
+name: Build deb packages
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:trixie
+    permissions:
+      contents: write   # needed to attach .deb files to a release
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            ca-certificates git \
+            build-essential debhelper devscripts pkg-config \
+            libmlt-dev libmlt++-dev
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0      # full history + tags, needed for git describe
+
+      - name: Mark workspace as safe for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Build packages
+        run: ./build-deb.sh --auto-version
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: melted-deb
+          path: dist/*.deb
+          if-no-files-found: error
+
+      - name: Attach packages to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.deb

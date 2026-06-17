@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+# Build the melted Debian packages.
+#
+# Upstream uses a custom (non-autotools) ./configure + make build system that
+# honours DESTDIR, prefix and libdir, so we drive it through debhelper overrides.
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	./configure \
+	  --prefix=/usr \
+	  --libdir=/usr/lib/$(DEB_HOST_MULTIARCH) \
+	  --enable-gpl \
+	  --disable-debug
+
+# The custom top-level Makefile runs "make depend" per subdir and is not
+# reliably parallel-safe, so build serially.
+override_dh_auto_build:
+	$(MAKE)
+
+override_dh_auto_install:
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+
+override_dh_auto_clean:
+	[ ! -f config.mak ] || $(MAKE) distclean || true
+	rm -f config.mak config.log packages.dat
+	rm -f mlt-melted.pc mlt-melted++.pc mlt-mvcp.pc

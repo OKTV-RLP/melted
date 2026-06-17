@@ -1,0 +1,41 @@
+Source: melted
+Section: video
+Priority: optional
+Maintainer: Melted Packaging <packaging@example.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ libmlt-dev | libmlt7-dev,
+ libmlt++-dev | libmlt++7-dev,
+ pkg-config
+Standards-Version: 4.6.2
+Homepage: https://www.mltframework.org/
+Rules-Requires-Root: no
+
+Package: melted
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends}
+Description: MLT multi-unit video playout server
+ Melted is a GPL multi-unit video playout server with realtime effects,
+ built on top of the MLT multimedia framework. It is controlled over the
+ network via the MVCP protocol.
+ .
+ This package contains the melted server, the mvcp command line clients,
+ the shared libraries (libmvcp, libmelted, libmelted++) and the MLT
+ modules required at runtime.
+
+Package: melted-dev
+Section: libdevel
+Architecture: any
+Depends:
+ melted (= ${binary:Version}),
+ libmlt-dev | libmlt7-dev,
+ ${misc:Depends}
+Description: MLT video playout server - development files
+ Melted is a GPL multi-unit video playout server with realtime effects,
+ built on top of the MLT multimedia framework.
+ .
+ This package contains the headers, pkg-config files and unversioned
+ shared library symlinks needed to build software against the melted
+ libraries (libmvcp, libmelted, libmelted++).

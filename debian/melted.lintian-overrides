@@ -1,0 +1,4 @@
+# Upstream uses a custom soversion scheme and ships the shared libraries
+# together with the server in a single runtime package by design, so the
+# usual library-package-name policy does not apply here.
+melted: package-name-doesnt-match-sonames

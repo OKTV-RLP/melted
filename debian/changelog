@@ -1,0 +1,5 @@
+melted (0.3.11) unstable; urgency=medium
+
+  * Add Debian packaging (debian/ + debhelper) and local build script.
+
+ -- Melted Packaging <packaging@example.com>  Wed, 17 Jun 2026 14:03:01 +0200
