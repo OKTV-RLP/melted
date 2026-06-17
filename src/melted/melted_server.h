@@ -56,12 +56,13 @@ typedef struct
 }
 *melted_server, melted_server_t;
 
-/** Event payload for the server events ("command-received", "doc-received",
-    "push-received"). Since MLT 7 an event carries a single mlt_event_data, so
-    the former multiple transmitter arguments are bundled into this structure
-    and passed via mlt_event_data_from_object(). A connected listener unpacks
-    it with mlt_event_data_to_object() and may set *response to short-circuit
-    the default parser handling.
+/** Event payload for the "command-received" and "push-received" server events
+    (service is only set for "push-received", NULL otherwise). Since MLT 7 an
+    event carries a single mlt_event_data, so the former multiple transmitter
+    arguments are bundled into this structure and passed via
+    mlt_event_data_from_object(). A connected listener unpacks it with
+    mlt_event_data_to_object() and may set *response to short-circuit the
+    default parser handling.
 */
 
 typedef struct
