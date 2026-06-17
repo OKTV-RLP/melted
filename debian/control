@@ -1,7 +1,7 @@
 Source: melted
 Section: video
 Priority: optional
-Maintainer: Melted Packaging <packaging@example.com>
+Maintainer: premultiply <4681172+premultiply@users.noreply.github.com>
 Build-Depends:
  debhelper-compat (= 13),
  libmlt-dev | libmlt7-dev,

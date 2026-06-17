@@ -54,28 +54,33 @@ for arg in "$@"; do
 	esac
 done
 
-# --- sanity checks --------------------------------------------------------
-
-if ! command -v dpkg-buildpackage >/dev/null 2>&1; then
-	echo "error: dpkg-buildpackage not found." >&2
-	echo "       Install it with: sudo apt-get install dpkg-dev debhelper" >&2
-	exit 1
-fi
-
 # --- optionally install build dependencies --------------------------------
+# Done before the sanity check below so that --install-deps also works on a
+# fresh machine that does not yet have dpkg-buildpackage installed.
 
 if [ "$INSTALL_DEPS" = "1" ]; then
 	echo ">> Installing build dependencies (requires sudo/root)..."
 	if command -v mk-build-deps >/dev/null 2>&1; then
+		sudo apt-get update
+		sudo apt-get install -y dpkg-dev
 		sudo mk-build-deps --install --remove \
 			--tool 'apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -y' \
 			debian/control
 	else
 		sudo apt-get update
 		sudo apt-get install -y \
-			build-essential debhelper devscripts pkg-config \
+			dpkg-dev build-essential debhelper devscripts pkg-config \
 			libmlt-dev libmlt++-dev
 	fi
+fi
+
+# --- sanity checks --------------------------------------------------------
+
+if ! command -v dpkg-buildpackage >/dev/null 2>&1; then
+	echo "error: dpkg-buildpackage not found." >&2
+	echo "       Install it with: sudo apt-get install dpkg-dev debhelper" >&2
+	echo "       (or re-run this script with --install-deps)" >&2
+	exit 1
 fi
 
 # --- derive / set the package version -------------------------------------
@@ -97,8 +102,8 @@ fi
 
 if [ -n "$VERSION" ]; then
 	echo ">> Setting package version to: $VERSION"
-	: "${DEBFULLNAME:=Melted Packaging}"
-	: "${DEBEMAIL:=packaging@example.com}"
+	: "${DEBFULLNAME:=premultiply}"
+	: "${DEBEMAIL:=4681172+premultiply@users.noreply.github.com}"
 	tmp=$(mktemp)
 	{
 		printf 'melted (%s) unstable; urgency=medium\n\n' "$VERSION"
@@ -117,9 +122,11 @@ dpkg-buildpackage "$BUILD_TYPE" -us -uc
 # --- collect artifacts ----------------------------------------------------
 
 mkdir -p dist
-# dpkg-buildpackage writes the .deb files into the parent directory.
+# dpkg-buildpackage writes the build products into the parent directory.
 mv -f ../melted_*.deb ../melted-dev_*.deb dist/ 2>/dev/null || true
 mv -f ../melted_*.changes ../melted_*.buildinfo dist/ 2>/dev/null || true
+# Source artifacts (only produced with --source): .dsc and the source tarball.
+mv -f ../melted_*.dsc ../melted_*.tar.* dist/ 2>/dev/null || true
 
 echo ""
 echo ">> Done. Packages in ./dist/:"

@@ -7,13 +7,17 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Default to a read-only token; the release job opts into write explicitly.
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
       image: debian:trixie
     permissions:
-      contents: write   # needed to attach .deb files to a release
+      contents: read    # build/test only - no write access for PR code
     steps:
       - name: Install build dependencies
         run: |
@@ -41,8 +45,22 @@ jobs:
           path: dist/*.deb
           if-no-files-found: error
 
+  release:
+    # Attach the built packages to the GitHub release - only on v* tags, where
+    # the write-capable token is never exposed to untrusted pull-request code.
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: melted-deb
+          path: dist
+
       - name: Attach packages to release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*.deb
