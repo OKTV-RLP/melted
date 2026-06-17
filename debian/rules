@@ -18,9 +18,10 @@ override_dh_auto_configure:
 	  --disable-debug
 
 # The custom top-level Makefile runs "make depend" per subdir and is not
-# reliably parallel-safe, so build serially.
+# reliably parallel-safe. Force -j1 on the command line so it overrides any
+# parallel MAKEFLAGS that debhelper/dpkg-buildpackage may export.
 override_dh_auto_build:
-	$(MAKE)
+	$(MAKE) -j1
 
 override_dh_auto_install:
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp

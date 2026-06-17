@@ -60,17 +60,23 @@ done
 
 if [ "$INSTALL_DEPS" = "1" ]; then
 	echo ">> Installing build dependencies (requires sudo/root)..."
+	sudo apt-get update
+	# Toolchain and packaging tools. build-essential is assumed by Debian
+	# policy and therefore not listed in debian/control, so install it here
+	# regardless of which dependency path is used below.
+	sudo apt-get install -y dpkg-dev build-essential
 	if command -v mk-build-deps >/dev/null 2>&1; then
-		sudo apt-get update
-		sudo apt-get install -y dpkg-dev
+		# Installs the Build-Depends straight from debian/control, which
+		# honours the libmlt-dev | libmlt7-dev alternatives automatically.
 		sudo mk-build-deps --install --remove \
 			--tool 'apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -y' \
 			debian/control
 	else
-		sudo apt-get update
-		sudo apt-get install -y \
-			dpkg-dev build-essential debhelper devscripts pkg-config \
-			libmlt-dev libmlt++-dev
+		sudo apt-get install -y debhelper devscripts pkg-config
+		# Official package names, with the deb-multimedia (DMO) versioned
+		# names as a fallback for systems that only ship those.
+		sudo apt-get install -y libmlt-dev libmlt++-dev \
+			|| sudo apt-get install -y libmlt7-dev libmlt++7-dev
 	fi
 fi
 

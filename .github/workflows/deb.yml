@@ -19,13 +19,14 @@ jobs:
     permissions:
       contents: read    # build/test only - no write access for PR code
     steps:
-      - name: Install build dependencies
+      # Toolchain + tools needed before/around checkout. The actual package
+      # build dependencies are installed from debian/control further down, so
+      # they are not duplicated here.
+      - name: Install base tooling
         run: |
           apt-get update
           apt-get install -y --no-install-recommends \
-            ca-certificates git \
-            build-essential debhelper devscripts pkg-config \
-            libmlt-dev libmlt++-dev
+            ca-certificates git dpkg-dev build-essential devscripts equivs
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,6 +35,12 @@ jobs:
 
       - name: Mark workspace as safe for git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Install build dependencies from debian/control
+        run: |
+          mk-build-deps --install --remove \
+            --tool 'apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends -y' \
+            debian/control
 
       - name: Build packages
         run: ./build-deb.sh --auto-version
