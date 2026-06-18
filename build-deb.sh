@@ -21,8 +21,9 @@
 #   no tags                       -> 0.0.0+g<shorthash>
 # Note: the package is a "native" Debian package, so the version must not
 # contain '-'; the snapshot form uses '+'/'.' which also sorts correctly
-# (0.3.11 < 0.3.11+5.gabc123 < 0.3.12). --auto-version rewrites the top
-# entry of debian/changelog (fine in CI; in a working tree it adds an entry).
+# (0.3.11 < 0.3.11+5.gabc123 < 0.3.12). --auto-version prepends a temporary
+# top entry to debian/changelog for the build and restores the committed file
+# on exit, so the working tree is left unmodified.
 #
 # This script must be run on a Debian/Ubuntu system (or in a container such
 # as `docker run -v "$PWD":/src -w /src debian:stable`). It is CI-friendly:
