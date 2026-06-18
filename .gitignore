@@ -26,3 +26,15 @@ src/swig/.[a-z]*
 src/swig/*/Makefile
 src/swig/*/mlt.i
 src/swig/*/mlt_wrap.*
+
+# Debian packaging build artifacts
+/dist/
+/debian/tmp/
+/debian/melted/
+/debian/melted-dev/
+/debian/.debhelper/
+/debian/files
+/debian/debhelper-build-stamp
+/debian/*.substvars
+/debian/*.log
+/debian/*.debhelper.log
