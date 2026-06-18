@@ -110,6 +110,11 @@ if [ -n "$VERSION" ]; then
 	echo ">> Setting package version to: $VERSION"
 	: "${DEBFULLNAME:=premultiply}"
 	: "${DEBEMAIL:=4681172+premultiply@users.noreply.github.com}"
+	# Back up the committed changelog and restore it when the script exits, so
+	# local builds (where the tree is not ephemeral) are not left modified.
+	changelog_backup=$(mktemp)
+	cp debian/changelog "$changelog_backup"
+	trap 'cp -f "$changelog_backup" debian/changelog; rm -f "$changelog_backup"' EXIT INT TERM
 	tmp=$(mktemp)
 	{
 		printf 'melted (%s) unstable; urgency=medium\n\n' "$VERSION"

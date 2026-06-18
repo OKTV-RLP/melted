@@ -26,6 +26,11 @@ override_dh_auto_build:
 override_dh_auto_install:
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
 
+# Fail the build if "make install" produced files that no package picks up,
+# so packaging gaps surface loudly instead of silently shipping nothing.
+override_dh_missing:
+	dh_missing --fail-missing
+
 override_dh_auto_clean:
 	[ ! -f config.mak ] || $(MAKE) distclean || true
 	rm -f config.mak config.log packages.dat
